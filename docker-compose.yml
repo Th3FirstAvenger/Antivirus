@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+
+# Web utilitzant el servei nginx, proporciona la informació i descripció de la infraestuctura.
+  web11:
+    image: nginx
+    restart: always
+    ports:
+      - 80:80
+
+    volumes:
+      - $PWD/web:/usr/share/nginx/html:ro
+
+  docker-av:
+    image: rordi/docker-antivirus
+    container_name: docker-av
+    # uncomment and set the email address to receive email alerts when viruses are detected
+    #command:
+    # - /usr/local/install_alerts.sh email@example.net
+    volumes:
+      - ./data/uploads:/data/av/queue
+      - ./data/ok:/data/av/ok
+      - ./data/nok:/data/av/nok
+      - ./data/quarantine:/data/av/quarantine
+    networks:
+      - avnetwork
+networks:
+  avnetwork:
+
